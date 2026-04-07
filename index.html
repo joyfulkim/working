@@ -347,12 +347,52 @@
       <div class="reveal reveal-delay-2 relative">
         <!-- Main card -->
         <div class="bezel-card rounded-3xl p-1.5 animate-float">
-          <div class="bezel-card-inner rounded-2xl overflow-hidden" class="thumb-wrap">
-          
+          <div class="bezel-card-inner rounded-2xl overflow-hidden">
+            <!-- Mock browser chrome -->
+            <div class="bg-card px-4 py-3 flex items-center gap-2 border-b border-border">
+              <div class="flex gap-1.5">
+                <span class="w-3 h-3 rounded-full bg-red-500 opacity-60"></span>
+                <span class="w-3 h-3 rounded-full bg-yellow-500 opacity-60"></span>
+                <span class="w-3 h-3 rounded-full bg-green-500 opacity-60"></span>
+              </div>
+              <div class="flex-1 mx-4 bg-surface rounded-md px-3 py-1 text-muted text-xs">
+                joyfulkim.github.io/working
+              </div>
+            </div>
+            <!-- Mock website preview -->
+            <div class="bg-gradient-to-br from-surface to-ink aspect-[4/3] relative overflow-hidden">
+              <div class="absolute inset-0 flex flex-col justify-end p-8">
+                <div class="space-y-3">
+                  <div class="w-24 h-1 bg-accent rounded-full opacity-60"></div>
+                  <div class="w-48 h-3 bg-white rounded-full opacity-20"></div>
+                  <div class="w-36 h-3 bg-white rounded-full opacity-10"></div>
+                  <div class="flex gap-2 mt-4">
+                    <div class="w-20 h-7 bg-accent rounded-full opacity-70"></div>
+                    <div class="w-20 h-7 bg-white rounded-full opacity-10"></div>
+                  </div>
+                </div>
+                <div class="absolute top-6 right-6 w-28 h-28 rounded-2xl bg-accent opacity-10"></div>
+                <div class="absolute top-16 right-16 w-16 h-16 rounded-xl bg-white opacity-5"></div>
+              </div>
+            </div>
+          </div>
+
+
+  <!-- Bento Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+
+    <!-- Card 1 — FEATURED: alljfm.web.app (wide) -->
+    <div class="md:col-span-8 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal">
+      <div class="p-1.5">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-[16/9] relative">
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://alljfm.web.app/" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
           <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
-          
+          <!-- Badge -->
+          <div class="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-500/20 border border-teal-400/30 z-10">
+            <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
+            <span class="text-teal-300 text-xs font-medium">Featured</span>
+          </div>
           <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
             <a href="https://alljfm.web.app/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
               <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>
@@ -381,7 +421,7 @@
     <!-- Card 2 — 성서침례교회 홈페이지 (tall) -->
     <div class="md:col-span-4 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-1">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-[3/4] relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-[3/4] relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://joyfulkim.github.io/church/index.html" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
@@ -407,7 +447,7 @@
     <!-- Card 3 — 조이플 미션 컨퍼런스 2026 (wide) -->
     <div class="md:col-span-7 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-video relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-video relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://joyfulkim.github.io/jcm2026/" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
@@ -441,7 +481,7 @@
     <!-- Card 4 — 꿈을심는교회 주보 (small) -->
     <div class="md:col-span-5 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-1">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-video relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-video relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://jubo-7e855.web.app/" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
@@ -468,7 +508,7 @@
     <!-- Card 5 — 조이플 성경 (medium) -->
     <div class="md:col-span-4 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-square relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-square relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://joyful-bible.vercel.app/" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
@@ -495,7 +535,7 @@
     <!-- Card 6 — 성경암송 플랫폼 (medium) -->
     <div class="md:col-span-4 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-1">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-square relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-square relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://service-848594308545.us-west1.run.app/" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
@@ -522,7 +562,7 @@
     <!-- Card 7 — 성침 트리뷴 웹진 (medium) -->
     <div class="md:col-span-4 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-2">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-square relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-square relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://webzin-jfm-2026.web.app/" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
@@ -549,7 +589,7 @@
     <!-- Card 8 — BBFK 주소록 (wide) -->
     <div class="md:col-span-6 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-video relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-video relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://joyful-address-book.web.app/login" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
@@ -583,7 +623,7 @@
     <!-- Card 9 — 2026 춘계 목회자 친교회 (wide) -->
     <div class="md:col-span-6 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-1">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-video relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-video relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://bbfk26-guide-app.web.app/" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
@@ -619,7 +659,7 @@
     <!-- Card 10 — 조이플엠 joyfulm.com (wide) -->
     <div class="md:col-span-8 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-video relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-video relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://joyfulm.com/" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
@@ -653,7 +693,7 @@
     <!-- Card 11 — 조이플 애드 jfmad.com (small) -->
     <div class="md:col-span-4 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-1">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-square relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-square relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://www.jfmad.com/" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
@@ -677,7 +717,7 @@
     <!-- Card 12 — 조이플 미션 jfm.kr (medium) -->
     <div class="md:col-span-5 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-video relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-video relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://www.jfm.kr/" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
@@ -701,7 +741,7 @@
     <!-- Card 13 — 조이플 북스 jfmkrbook.web.app (medium) -->
     <div class="md:col-span-4 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-1">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-video relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-video relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://jfmkrbook.web.app/" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
@@ -725,7 +765,7 @@
     <!-- Card 14 — 한국기독교성경교육연구원 kcbei.com (wide) -->
     <div class="md:col-span-3 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-2">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-video relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-video relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://www.kcbei.com/" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
@@ -749,7 +789,7 @@
     <!-- Card 15 — 크리스천 심리상담센터 jfmkrccc.web.app (medium) -->
     <div class="md:col-span-5 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-video relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-video relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://jfmkrccc.web.app/" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
@@ -773,7 +813,7 @@
     <!-- Card 16 — 고난주간 온라인 묵상나눔 holyweek.co.kr (medium) -->
     <div class="md:col-span-4 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-1">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-square relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-square relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://www.holyweek.co.kr/" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
@@ -797,7 +837,7 @@
     <!-- Card 17 — 아브라함 쿠루빌라 설교 세미나 (wide) -->
     <div class="md:col-span-5 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-2">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-video relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-video relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://sermon-five.vercel.app/" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
@@ -821,7 +861,7 @@
     <!-- Card 18 — 2026 몽골 비전트립 withmongol.kr (wide) -->
     <div class="md:col-span-7 project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal">
       <div class="p-1.5">
-        <div class="bezel-card-inner rounded-2xl overflow-hidden aspect-video relative" class="thumb-wrap">
+        <div class="bezel-card-inner thumb-wrap rounded-2xl overflow-hidden aspect-video relative">
           
           <div class="thumb-skeleton"></div>
           <img src="https://image.thum.io/get/width/1280/crop/720/https://www.withmongol.kr/" class="w-full h-full object-cover object-top" alt="사이트 썸네일" loading="lazy" onerror="this.style.display='none'" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()" />
