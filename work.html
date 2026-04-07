@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>작업 — 조이플킴 포트폴리오</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Pretendard Variable', 'sans-serif'] },
+          colors: {
+            ink: '#07070d',
+            surface: '#0f0f1a',
+            card: '#141421',
+            border: 'rgba(255,255,255,0.07)',
+            accent: '#a3f0c8',
+            'accent-dim': 'rgba(163,240,200,0.12)',
+            muted: '#4a4a6a',
+            subtle: '#8888aa',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: 'Pretendard Variable', sans-serif;
+      background-color: #07070d;
+      color: #e8e8f0;
+      overflow-x: hidden;
+      word-break: keep-all;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.35;
+    }
+    .glass-nav {
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      background: rgba(15,15,26,0.72);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .bezel-card {
+      background: linear-gradient(135deg,rgba(255,255,255,0.05) 0%,rgba(255,255,255,0.02) 100%);
+      border: 1px solid rgba(255,255,255,0.07);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.03),inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    /* Thumbnail */
+    .thumb-wrap { position: relative; overflow: hidden; background: #0f0f1a; }
+    .thumb-wrap img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: transform 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease; opacity: 0; }
+    .thumb-wrap img.loaded { opacity: 1; }
+    .thumb-wrap:hover img { transform: scale(1.04); }
+    .thumb-skeleton {
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg,#141421 25%,#1e1e30 50%,#141421 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.8s infinite;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* Card */
+    .project-card {
+      transition: transform 0.5s cubic-bezier(0.16,1,0.3,1),
+                  box-shadow 0.5s cubic-bezier(0.16,1,0.3,1),
+                  border-color 0.3s ease;
+    }
+    .project-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      border-color: rgba(163,240,200,0.2);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5),0 0 40px rgba(163,240,200,0.08);
+    }
+
+    /* Overlay */
+    .img-overlay {
+      background: linear-gradient(to top,rgba(7,7,13,0.92) 0%,rgba(7,7,13,0.5) 40%,rgba(7,7,13,0.1) 100%);
+    }
+
+    /* Tag */
+    .tag {
+      display: inline-flex; align-items: center;
+      padding: 4px 12px; border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.02em;
+      background: rgba(163,240,200,0.08); color: #a3f0c8;
+      border: 1px solid rgba(163,240,200,0.15);
+    }
+
+    /* Filter button */
+    .filter-btn {
+      padding: 8px 18px; border-radius: 9999px;
+      font-size: 0.8rem; font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.03);
+      color: #8888aa;
+      transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+      cursor: pointer;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(163,240,200,0.1);
+      border-color: rgba(163,240,200,0.3);
+      color: #a3f0c8;
+    }
+
+    /* Reveal */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.05s; }
+    .reveal-delay-2 { transition-delay: 0.1s; }
+    .reveal-delay-3 { transition-delay: 0.15s; }
+
+    /* Btn pill */
+    .btn-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 9999px;
+      font-weight: 600; font-size: 0.875rem;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .btn-ghost {
+      background: rgba(255,255,255,0.04); color: #e8e8f0;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.08); border-color: rgba(163,240,200,0.3); color: #a3f0c8; transform: translateY(-2px); }
+    .btn-primary { background: #a3f0c8; color: #07070d; }
+    .btn-primary:hover { background: #c8f8e0; box-shadow: 0 8px 30px rgba(163,240,200,0.4); transform: translateY(-2px); }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #07070d; }
+    ::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 2px; }
+
+    /* Hidden card for filter */
+    .card-hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<!-- ═══ FLOATING NAV ═══ -->
+<header class="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
+  <nav class="glass-nav rounded-2xl px-6 py-3 flex items-center justify-between w-full max-w-5xl">
+    <a href="index.html" class="flex items-center gap-2">
+      <div class="w-7 h-7 rounded-lg bg-accent flex items-center justify-center">
+        <span class="text-ink font-black text-xs">JF</span>
+      </div>
+      <span class="font-bold text-sm tracking-tight text-white">조이플킴</span>
+    </a>
+    <ul class="hidden md:flex items-center gap-6">
+      <li><a href="work.html" class="text-accent text-sm font-medium">작업</a></li>
+      <li><a href="index.html#about" class="text-subtle text-sm hover:text-white transition-colors duration-200">소개</a></li>
+      <li><a href="index.html#process" class="text-subtle text-sm hover:text-white transition-colors duration-200">프로세스</a></li>
+      <li><a href="index.html#contact" class="text-subtle text-sm hover:text-white transition-colors duration-200">연락</a></li>
+    </ul>
+    <a href="tel:01095824999" class="btn-pill btn-primary text-xs py-2.5 px-5">
+      <iconify-icon icon="solar:phone-bold" width="14"></iconify-icon>
+      협업 문의
+    </a>
+  </nav>
+</header>
+
+
+<!-- ═══ PAGE HERO ═══ -->
+<section class="pt-32 pb-12 max-w-5xl mx-auto px-6">
+  <div class="reveal">
+    <a href="index.html" class="inline-flex items-center gap-2 text-subtle text-sm hover:text-accent transition-colors mb-8">
+      <iconify-icon icon="solar:arrow-left-bold" width="14"></iconify-icon>
+      메인으로 돌아가기
+    </a>
+  </div>
+  <div class="reveal reveal-delay-1">
+    <p class="text-accent text-xs font-medium tracking-widest uppercase mb-3">Selected Work</p>
+    <h1 class="text-5xl md:text-6xl font-black tracking-tight text-white mb-4" style="line-height:1.05">
+      직접 만든<br/>웹사이트들
+    </h1>
+    <p class="text-subtle text-lg max-w-lg mt-4" style="line-height:1.75">
+      기획부터 디자인, 개발, 배포까지 직접 구현한 18개 사이트입니다.
+    </p>
+  </div>
+
+  <!-- Stats -->
+  <div class="reveal reveal-delay-2 flex flex-wrap items-center gap-8 mt-10 pt-8 border-t border-border">
+    <div>
+      <div class="text-4xl font-black tracking-tight" style="background:linear-gradient(135deg,#fff 0%,#a3f0c8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">18</div>
+      <div class="text-subtle text-sm mt-0.5">완성된 사이트</div>
+    </div>
+    <div class="w-px h-10 bg-border"></div>
+    <div>
+      <div class="text-4xl font-black tracking-tight" style="background:linear-gradient(135deg,#fff 0%,#a3f0c8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">8</div>
+      <div class="text-subtle text-sm mt-0.5">협력 기관</div>
+    </div>
+    <div class="w-px h-10 bg-border"></div>
+    <div>
+      <div class="text-4xl font-black tracking-tight" style="background:linear-gradient(135deg,#fff 0%,#a3f0c8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">100%</div>
+      <div class="text-subtle text-sm mt-0.5">직접 설계·구현</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ FILTER BAR ═══ -->
+<div class="sticky top-20 z-40 py-4 px-6 max-w-5xl mx-auto">
+  <div class="glass-nav rounded-2xl px-4 py-3 flex items-center gap-2 overflow-x-auto scrollbar-none">
+    <button class="filter-btn active" data-filter="all">전체 <span class="ml-1 opacity-50 text-xs">18</span></button>
+    <button class="filter-btn" data-filter="사역">사역·선교</button>
+    <button class="filter-btn" data-filter="교회">교회·주보</button>
+    <button class="filter-btn" data-filter="성경">성경·교육</button>
+    <button class="filter-btn" data-filter="이벤트">행사·이벤트</button>
+    <button class="filter-btn" data-filter="출판">출판·웹진</button>
+    <button class="filter-btn" data-filter="플랫폼">플랫폼·시스템</button>
+  </div>
+</div>
+
+
+<!-- ═══ PROJECTS GRID ═══ -->
+<main class="max-w-5xl mx-auto px-6 pb-32">
+  <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-4">
+
+    <!-- 1. Joyful Family SERVICES -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal sm:col-span-2 lg:col-span-2" data-tags="사역">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://alljfm.web.app/"
+               alt="Joyful Family SERVICES" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-teal-500/20 border border-teal-400/30 z-10">
+            <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
+            <span class="text-teal-300 text-xs font-medium">Featured</span>
+          </div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
+            <a href="https://alljfm.web.app/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-5 pb-5 pt-2">
+        <div class="flex gap-1.5 mb-2 flex-wrap"><span class="tag">서비스 포털</span><span class="tag">사역 플랫폼</span></div>
+        <h2 class="text-white font-bold text-xl tracking-tight">Joyful Family SERVICES</h2>
+        <p class="text-muted text-sm mt-1">조이플 패밀리의 모든 사역 플랫폼을 한 곳에서 연결하는 통합 서비스 디렉토리</p>
+      </div>
+    </div>
+
+    <!-- 2. 성서침례교회 홈페이지 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal" data-tags="교회">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:3/4">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/960/https://joyfulkim.github.io/church/index.html"
+               alt="성서침례교회" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://joyfulkim.github.io/church/index.html" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">교회 홈페이지</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">성서침례교회 홈페이지</h2>
+        <p class="text-muted text-xs mt-1">마포구 소재 교회 공식 웹사이트 — 예배·공동체 안내</p>
+      </div>
+    </div>
+
+    <!-- 3. 조이플 미션 컨퍼런스 2026 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-1" data-tags="이벤트 사역">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://joyfulkim.github.io/jcm2026/"
+               alt="조이플 미션 컨퍼런스" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://joyfulkim.github.io/jcm2026/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">컨퍼런스</span><span class="tag">이벤트</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">조이플 미션 컨퍼런스 2026</h2>
+        <p class="text-muted text-xs mt-1">50개국 100+ 선교지 연결 — 글로벌 선교 컨퍼런스</p>
+      </div>
+    </div>
+
+    <!-- 4. 꿈을심는교회 e주보 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-2" data-tags="교회">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://jubo-7e855.web.app/"
+               alt="꿈을심는교회 주보" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://jubo-7e855.web.app/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">교회 주보</span><span class="tag">웹앱</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">꿈을심는교회 e주보</h2>
+        <p class="text-muted text-xs mt-1">주간 설교·행사 안내를 담은 디지털 주보</p>
+      </div>
+    </div>
+
+    <!-- 5. 조이플 성경 검색 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal" data-tags="성경">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://joyful-bible.vercel.app/"
+               alt="조이플 성경" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://joyful-bible.vercel.app/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">성경</span><span class="tag">묵상</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">조이플 성경 검색</h2>
+        <p class="text-muted text-xs mt-1">깊은 말씀 묵상을 위한 한국어 성경 읽기 플랫폼</p>
+      </div>
+    </div>
+
+    <!-- 6. 성경암송 플랫폼 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-1" data-tags="성경 플랫폼">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://service-848594308545.us-west1.run.app/"
+               alt="성경암송 플랫폼" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://service-848594308545.us-west1.run.app/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">암송</span><span class="tag">교육</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">성경암송 플랫폼</h2>
+        <p class="text-muted text-xs mt-1">말씀 암송 훈련을 돕는 학습 플랫폼</p>
+      </div>
+    </div>
+
+    <!-- 7. 성침 트리뷴 웹진 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-2" data-tags="출판">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://webzin-jfm-2026.web.app/"
+               alt="성침 트리뷴 웹진" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://webzin-jfm-2026.web.app/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">웹진</span><span class="tag">출판</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">성침 트리뷴 웹진</h2>
+        <p class="text-muted text-xs mt-1">BBFK 공식 정기 간행물 — 2026 봄호 (Vol.34)</p>
+      </div>
+    </div>
+
+    <!-- 8. BBFK 회원 주소록 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal" data-tags="플랫폼">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://joyful-address-book.web.app/login"
+               alt="BBFK 주소록" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://joyful-address-book.web.app/login" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">회원관리</span><span class="tag">검색 시스템</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">BBFK 회원 주소록 시스템</h2>
+        <p class="text-muted text-xs mt-1">한국성서침례교회 연합 회원 온라인 검색</p>
+      </div>
+    </div>
+
+    <!-- 9. 2026 춘계 목회자 친교회 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-1" data-tags="이벤트">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://bbfk26-guide-app.web.app/"
+               alt="2026 춘계 목회자 친교회" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://bbfk26-guide-app.web.app/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">이벤트 가이드</span><span class="tag">행사 앱</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">2026 춘계 목회자 친교회</h2>
+        <p class="text-muted text-xs mt-1">경주 성호리조트 전국 목회자 친교회 행사 안내</p>
+      </div>
+    </div>
+
+    <!-- 10. 조이플엠 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-2" data-tags="사역 플랫폼">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://joyfulm.com/"
+               alt="조이플엠" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://joyfulm.com/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">사역</span><span class="tag">온라인 미니스트리</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">조이플엠 (Joyfulm)</h2>
+        <p class="text-muted text-xs mt-1">교회의 온라인 사역을 함께하는 동반자 플랫폼</p>
+      </div>
+    </div>
+
+    <!-- 11. 조이플 애드 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal" data-tags="사역">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://www.jfmad.com/"
+               alt="조이플 애드" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://www.jfmad.com/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">디자인</span><span class="tag">사역</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">조이플 애드</h2>
+        <p class="text-muted text-xs mt-1">퀄리티 디자인으로 교회 사역을 풍성하게</p>
+      </div>
+    </div>
+
+    <!-- 12. 조이플 미션 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-1" data-tags="사역">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://www.jfm.kr/"
+               alt="조이플 미션" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://www.jfm.kr/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">선교</span><span class="tag">미션</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">조이플 미션 (JFM)</h2>
+        <p class="text-muted text-xs mt-1">온 세상을 향한 기쁨의 통로</p>
+      </div>
+    </div>
+
+    <!-- 13. 조이플 북스 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-2" data-tags="출판">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://jfmkrbook.web.app/"
+               alt="조이플 북스" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://jfmkrbook.web.app/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">출판</span><span class="tag">도서</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">조이플 북스</h2>
+        <p class="text-muted text-xs mt-1">믿음을 깊게 하는 책 출판 플랫폼</p>
+      </div>
+    </div>
+
+    <!-- 14. 한국기독교성경교육연구원 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal" data-tags="성경 교육">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://www.kcbei.com/"
+               alt="한국기독교성경교육연구원" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://www.kcbei.com/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">교육</span><span class="tag">연구</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">한국기독교 성경교육연구원</h2>
+        <p class="text-muted text-xs mt-1">심층 성경 연구 및 교육 기관</p>
+      </div>
+    </div>
+
+    <!-- 15. 크리스천 심리상담센터 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-1" data-tags="플랫폼">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://jfmkrccc.web.app/"
+               alt="크리스천 심리상담센터" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://jfmkrccc.web.app/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">상담</span><span class="tag">심리</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">크리스천 심리상담센터</h2>
+        <p class="text-muted text-xs mt-1">정서적 치유와 회복을 돕는 기독 상담 서비스</p>
+      </div>
+    </div>
+
+    <!-- 16. 고난주간 온라인 묵상나눔 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-2" data-tags="사역 성경">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://www.holyweek.co.kr/"
+               alt="고난주간 묵상나눔" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://www.holyweek.co.kr/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">묵상</span><span class="tag">고난주간</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">고난주간 온라인 묵상나눔</h2>
+        <p class="text-muted text-xs mt-1">예수님의 수난을 함께 묵상하는 온라인 사역</p>
+      </div>
+    </div>
+
+    <!-- 17. 아브라함 쿠루빌라 설교 세미나 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal" data-tags="성경 이벤트">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://sermon-five.vercel.app/"
+               alt="설교 세미나" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://sermon-five.vercel.app/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">설교</span><span class="tag">세미나</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">아브라함 쿠루빌라 설교 세미나</h2>
+        <p class="text-muted text-xs mt-1">그리스도의 형상을 따르는 설교 훈련 과정</p>
+      </div>
+    </div>
+
+    <!-- 18. 2026 몽골 비전트립 -->
+    <div class="project-card bezel-card rounded-3xl overflow-hidden group cursor-pointer reveal reveal-delay-1 sm:col-span-2 lg:col-span-1" data-tags="사역 이벤트">
+      <div class="p-1.5">
+        <div class="thumb-wrap rounded-2xl overflow-hidden" style="aspect-ratio:16/9">
+          <div class="thumb-skeleton"></div>
+          <img src="https://image.thum.io/get/width/1280/crop/720/https://www.withmongol.kr/"
+               alt="2026 몽골 비전트립" loading="lazy"
+               onerror="this.style.display='none'"
+               onload="this.classList.add('loaded');this.previousElementSibling?.remove()" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent"></div>
+          <div class="absolute inset-0 img-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+            <a href="https://www.withmongol.kr/" target="_blank" class="btn-pill btn-primary text-sm opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+              <iconify-icon icon="solar:arrow-right-up-bold" width="16"></iconify-icon>사이트 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 pb-4 pt-2">
+        <div class="flex gap-1.5 mb-1.5 flex-wrap"><span class="tag">선교 여행</span><span class="tag">비전트립</span></div>
+        <h2 class="text-white font-bold text-base tracking-tight">2026 몽골 비전트립</h2>
+        <p class="text-muted text-xs mt-1">별빛 아래 주님과 동행하는 몽골 비전트립</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Empty state -->
+  <div id="empty" class="hidden text-center py-24">
+    <iconify-icon icon="solar:folder-open-bold" class="text-muted" width="48"></iconify-icon>
+    <p class="text-muted mt-4">해당 카테고리의 프로젝트가 없습니다.</p>
+  </div>
+</main>
+
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="border-t border-border py-8">
+  <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-2">
+      <div class="w-6 h-6 rounded-lg bg-accent flex items-center justify-center">
+        <span class="text-ink font-black text-xs">JF</span>
+      </div>
+      <span class="text-white font-bold text-sm">조이플킴</span>
+      <span class="text-muted text-xs ml-1">Web Designer & Builder</span>
+    </div>
+    <a href="index.html" class="btn-pill btn-ghost text-sm py-2.5 px-5">
+      <iconify-icon icon="solar:home-bold" width="15"></iconify-icon>
+      메인으로
+    </a>
+    <p class="text-muted text-xs">© 2026 조이플킴. All rights reserved.</p>
+  </div>
+</footer>
+
+
+<script>
+  // ── Scroll reveal ──
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ── Category filter ──
+  const btns = document.querySelectorAll('.filter-btn');
+  const allCards = document.querySelectorAll('#grid > div[data-tags]');
+  const empty = document.getElementById('empty');
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      let visible = 0;
+      allCards.forEach(card => {
+        const tags = card.dataset.tags || '';
+        if (filter === 'all' || tags.includes(filter)) {
+          card.classList.remove('card-hidden');
+          visible++;
+        } else {
+          card.classList.add('card-hidden');
+        }
+      });
+      empty.classList.toggle('hidden', visible > 0);
+    });
+  });
+
+  // ── Nav scroll shrink ──
+  window.addEventListener('scroll', () => {
+    document.querySelector('header').style.paddingTop = window.scrollY > 50 ? '0.25rem' : '1rem';
+  }, { passive: true });
+</script>
+</body>
+</html>
