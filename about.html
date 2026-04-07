@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>소개 — 조이플킴 포트폴리오</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Pretendard Variable', 'sans-serif'] },
+          colors: {
+            ink: '#07070d',
+            surface: '#0f0f1a',
+            card: '#141421',
+            border: 'rgba(255,255,255,0.07)',
+            accent: '#a3f0c8',
+            'accent-dim': 'rgba(163,240,200,0.12)',
+            muted: '#4a4a6a',
+            subtle: '#8888aa',
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) forwards',
+            'fade-in': 'fadeIn 0.5s cubic-bezier(0.16,1,0.3,1) forwards',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: '0', transform: 'translateY(28px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Pretendard Variable', sans-serif;
+      background-color: #07070d;
+      color: #e8e8f0;
+      overflow-x: hidden;
+      word-break: keep-all;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.35;
+    }
+    .glass-nav {
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      background: rgba(15, 15, 26, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .bezel-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+      border: 1px solid rgba(255,255,255,0.07);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.03), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .bezel-card-inner {
+      background: rgba(10,10,20,0.5);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    .btn-pill {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      letter-spacing: -0.01em;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .btn-primary {
+      background: #a3f0c8;
+      color: #07070d;
+    }
+    .btn-primary:hover {
+      background: #c8f8e0;
+      box-shadow: 0 8px 30px rgba(163, 240, 200, 0.4);
+      transform: translateY(-2px);
+    }
+    .btn-ghost {
+      background: rgba(255,255,255,0.04);
+      color: #e8e8f0;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(163, 240, 200, 0.3);
+      color: #a3f0c8;
+      transform: translateY(-2px);
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      background: rgba(163, 240, 200, 0.08);
+      color: #a3f0c8;
+      border: 1px solid rgba(163, 240, 200, 0.15);
+    }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #07070d; }
+    ::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 2px; }
+    .radial-glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .page-hero-title {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+    .nav-active {
+      color: #a3f0c8 !important;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     FLOATING NAV
+═══════════════════════════════════════════ -->
+<header class="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
+  <nav class="glass-nav rounded-2xl px-6 py-3 flex items-center justify-between w-full max-w-5xl">
+    <a href="index.html" class="flex items-center gap-2">
+      <div class="w-7 h-7 rounded-lg bg-accent flex items-center justify-center">
+        <span class="text-ink font-black text-xs">JF</span>
+      </div>
+      <span class="font-bold text-sm tracking-tight text-white">조이플킴</span>
+    </a>
+    <ul class="hidden md:flex items-center gap-6">
+      <li><a href="work.html" class="text-subtle text-sm hover:text-white transition-colors duration-200">작업</a></li>
+      <li><a href="about.html" class="text-sm transition-colors duration-200 nav-active">소개</a></li>
+      <li><a href="process.html" class="text-subtle text-sm hover:text-white transition-colors duration-200">프로세스</a></li>
+    </ul>
+    <a href="tel:01095824999" class="btn-pill btn-primary text-xs py-2.5 px-5">
+      <iconify-icon icon="solar:phone-bold" width="14"></iconify-icon>
+      협업 문의
+    </a>
+  </nav>
+</header>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE HERO
+═══════════════════════════════════════════ -->
+<section class="relative pt-36 pb-16 overflow-hidden">
+  <div class="radial-glow w-96 h-96 bg-accent top-0 right-0 opacity-8"></div>
+  <div class="max-w-5xl mx-auto px-6">
+    <p class="text-accent text-xs font-medium tracking-widest uppercase mb-4 reveal">About</p>
+    <h1 class="page-hero-title text-white reveal reveal-delay-1">
+      소개
+    </h1>
+    <p class="text-subtle text-lg mt-4 max-w-xl reveal reveal-delay-2" style="line-height:1.75">
+      아름다움과 기능 사이의 균형을 찾는 웹 디자이너, 조이플킴입니다.
+    </p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     ABOUT — ZIG-ZAG SPLIT
+═══════════════════════════════════════════ -->
+<section class="py-24 bg-surface border-y border-border">
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+      <!-- Visual -->
+      <div class="reveal order-2 lg:order-1">
+        <div class="bezel-card rounded-3xl p-1.5 max-w-sm mx-auto">
+          <div class="bezel-card-inner rounded-2xl overflow-hidden">
+            <img
+              src="joyfulkim.jpg"
+              alt="조이플킴"
+              class="w-full object-cover object-top"
+              style="aspect-ratio:3/4;"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Text -->
+      <div class="order-1 lg:order-2">
+        <h2 class="text-4xl font-bold tracking-tight text-white mb-6 reveal">
+          아름다움과<br/>기능 사이의<br/>균형을 찾습니다
+        </h2>
+        <div class="space-y-4 reveal reveal-delay-1">
+          <p class="text-subtle leading-relaxed" style="line-height:1.8">
+            6년간 스타트업부터 대기업까지, 다양한 규모의 디지털 프로덕트를 디자인했습니다.
+            UI를 그리는 것을 넘어, 사용자의 행동 패턴을 분석하고 비즈니스 목표와
+            연결짓는 과정에서 보람을 느낍니다.
+          </p>
+          <p class="text-subtle leading-relaxed" style="line-height:1.8">
+            Figma, Framer, Webflow를 주력으로 사용하며, HTML/CSS와 기초적인 JavaScript로
+            프로토타입을 직접 구현합니다. 개발자와의 긴밀한 협업이 가능한 디자이너입니다.
+          </p>
+        </div>
+
+        <!-- Skills -->
+        <div class="mt-8 reveal reveal-delay-2">
+          <div class="flex flex-wrap gap-2">
+            <span class="tag">UX 리서치</span>
+            <span class="tag">UI 디자인</span>
+            <span class="tag">프로토타이핑</span>
+            <span class="tag">Webflow</span>
+            <span class="tag">Framer</span>
+            <span class="tag">HTML/CSS</span>
+            <span class="tag">모션 디자인</span>
+          </div>
+        </div>
+
+        <!-- Download CV -->
+        <div class="mt-8 reveal reveal-delay-3">
+          <a href="#" class="btn-pill btn-ghost inline-flex">
+            <iconify-icon icon="solar:file-download-bold" width="16"></iconify-icon>
+            이력서 다운로드
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     STATS
+═══════════════════════════════════════════ -->
+<section class="py-20 max-w-5xl mx-auto px-6">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <div class="bezel-card rounded-3xl p-8 text-center reveal">
+      <div class="text-5xl font-black tracking-tight mb-2" style="background:linear-gradient(135deg,#fff,#a3f0c8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">18+</div>
+      <div class="text-subtle text-sm mt-1">완성된 사이트</div>
+    </div>
+    <div class="bezel-card rounded-3xl p-8 text-center reveal reveal-delay-1">
+      <div class="text-5xl font-black tracking-tight mb-2" style="background:linear-gradient(135deg,#fff,#a3f0c8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">6개</div>
+      <div class="text-subtle text-sm mt-1">사역 기관 협력</div>
+    </div>
+    <div class="bezel-card rounded-3xl p-8 text-center reveal reveal-delay-2">
+      <div class="text-5xl font-black tracking-tight mb-2" style="background:linear-gradient(135deg,#fff,#a3f0c8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">100%</div>
+      <div class="text-subtle text-sm mt-1">직접 설계·구현</div>
+    </div>
+    <div class="bezel-card rounded-3xl p-8 text-center reveal reveal-delay-3">
+      <div class="text-5xl font-black tracking-tight mb-2" style="background:linear-gradient(135deg,#fff,#a3f0c8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">2h</div>
+      <div class="text-subtle text-sm mt-1">평균 응답 시간</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     TESTIMONIALS — MASONRY
+═══════════════════════════════════════════ -->
+<section class="py-24 bg-surface border-y border-border">
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="text-center mb-14">
+      <p class="text-accent text-xs font-medium tracking-widest uppercase mb-4 reveal">Testimonials</p>
+      <h2 class="text-4xl font-bold tracking-tight text-white reveal reveal-delay-1">클라이언트의 이야기</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-4">
+      <!-- Testimonial 1 -->
+      <div class="bezel-card rounded-3xl p-6 md:row-span-2 reveal">
+        <div class="flex gap-0.5 mb-4">
+          <iconify-icon icon="solar:star-bold" class="text-accent" width="14"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" class="text-accent" width="14"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" class="text-accent" width="14"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" class="text-accent" width="14"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" class="text-accent" width="14"></iconify-icon>
+        </div>
+        <p class="text-subtle leading-relaxed mb-6 text-sm" style="line-height:1.8">
+          "단순히 예쁜 페이지가 아닌, 전환율을 실제로 높여주는 디자인을 만들어줬습니다.
+          런칭 후 첫 달에 리드가 3배 증가했어요. 비즈니스를 진짜 이해하는 디자이너입니다."
+        </p>
+        <div class="flex items-center gap-3 pt-4 border-t border-border">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-ink font-bold text-sm">이</div>
+          <div>
+            <div class="text-white font-semibold text-sm">이하윤</div>
+            <div class="text-muted text-xs">스텔라랩스 CEO</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 2 -->
+      <div class="bezel-card rounded-3xl p-6 reveal reveal-delay-1">
+        <div class="flex gap-0.5 mb-3">
+          <iconify-icon icon="solar:star-bold" class="text-accent" width="14"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" class="text-accent" width="14"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" class="text-accent" width="14"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" class="text-accent" width="14"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" class="text-accent" width="14"></iconify-icon>
+        </div>
+        <p class="text-subtle text-sm leading-relaxed mb-4" style="line-height:1.75">
+          "마감을 정확히 지키고, 피드백 반영이 빠릅니다. 다시 함께하고 싶은 디자이너예요."
+        </p>
+        <div class="flex items-center gap-3 pt-3 border-t border-border">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center text-ink font-bold text-sm">박</div>
+          <div>
+            <div class="text-white font-semibold text-sm">박도현</div>
+            <div class="text-muted text-xs">루미너스 CTO</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 3 -->
+      <div class="bezel-card rounded-3xl p-6 reveal reveal-delay-2">
+        <div class="flex gap-0.5 mb-3">
+          <iconify-icon icon="solar:star-bold" class="text-accent" width="14"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" class="text-accent" width="14"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" class="text-accent" width="14"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" class="text-accent" width="14"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" class="text-accent" width="14"></iconify-icon>
+        </div>
+        <p class="text-subtle text-sm leading-relaxed mb-4" style="line-height:1.75">
+          "개발자 출신처럼 구현 가능성을 항상 고려해줍니다. 덕분에 개발 단계에서 수정이 거의 없었어요."
+        </p>
+        <div class="flex items-center gap-3 pt-3 border-t border-border">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-ink font-bold text-sm">최</div>
+          <div>
+            <div class="text-white font-semibold text-sm">최서연</div>
+            <div class="text-muted text-xs">클라우드워크 PM</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 4 -->
+      <div class="bezel-card rounded-3xl p-6 reveal reveal-delay-3">
+        <p class="text-subtle text-sm leading-relaxed mb-4" style="line-height:1.75">
+          "브랜드 스토리를 디자인으로 완벽하게 표현해줬습니다. 고객들 반응이 놀라웠어요."
+        </p>
+        <div class="flex items-center gap-3 pt-3 border-t border-border">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-ink font-bold text-sm">김</div>
+          <div>
+            <div class="text-white font-semibold text-sm">김지원</div>
+            <div class="text-muted text-xs">에버플로우 대표</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════ -->
+<footer class="border-t border-border py-10">
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-lg bg-accent flex items-center justify-center">
+          <span class="text-ink font-black text-xs">JF</span>
+        </div>
+        <span class="font-bold text-sm text-white tracking-tight">조이플킴</span>
+        <span class="text-muted text-xs ml-2">Web Designer & Builder</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="#" class="w-9 h-9 rounded-full bg-surface border border-border flex items-center justify-center hover:border-accent/40 hover:text-accent text-muted transition-all duration-200">
+          <iconify-icon icon="solar:instagram-bold" width="16"></iconify-icon>
+        </a>
+        <a href="#" class="w-9 h-9 rounded-full bg-surface border border-border flex items-center justify-center hover:border-accent/40 hover:text-accent text-muted transition-all duration-200">
+          <iconify-icon icon="solar:twitter-bold" width="16"></iconify-icon>
+        </a>
+        <a href="#" class="w-9 h-9 rounded-full bg-surface border border-border flex items-center justify-center hover:border-accent/40 hover:text-accent text-muted transition-all duration-200">
+          <iconify-icon icon="solar:global-bold" width="16"></iconify-icon>
+        </a>
+        <a href="#" class="w-9 h-9 rounded-full bg-surface border border-border flex items-center justify-center hover:border-accent/40 hover:text-accent text-muted transition-all duration-200">
+          <iconify-icon icon="solar:letter-bold" width="16"></iconify-icon>
+        </a>
+      </div>
+      <p class="text-muted text-xs">© 2026 조이플킴. All rights reserved.</p>
+    </div>
+    <div class="mt-6 text-center">
+      <a href="index.html" class="text-subtle text-xs hover:text-accent transition-colors duration-200 inline-flex items-center gap-1">
+        <iconify-icon icon="solar:arrow-left-bold" width="12"></iconify-icon>
+        메인으로
+      </a>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+  );
+  revealEls.forEach(el => observer.observe(el));
+
+  const nav = document.querySelector('header');
+  window.addEventListener('scroll', () => {
+    nav.style.paddingTop = window.scrollY > 60 ? '0.5rem' : '1rem';
+    nav.style.paddingBottom = window.scrollY > 60 ? '0.5rem' : '1rem';
+  }, { passive: true });
+</script>
+
+</body>
+</html>

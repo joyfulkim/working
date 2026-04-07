@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>프로세스 — 조이플킴 포트폴리오</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Pretendard Variable', 'sans-serif'] },
+          colors: {
+            ink: '#07070d',
+            surface: '#0f0f1a',
+            card: '#141421',
+            border: 'rgba(255,255,255,0.07)',
+            accent: '#a3f0c8',
+            'accent-dim': 'rgba(163,240,200,0.12)',
+            muted: '#4a4a6a',
+            subtle: '#8888aa',
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) forwards',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: '0', transform: 'translateY(28px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Pretendard Variable', sans-serif;
+      background-color: #07070d;
+      color: #e8e8f0;
+      overflow-x: hidden;
+      word-break: keep-all;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.35;
+    }
+    .glass-nav {
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      background: rgba(15, 15, 26, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .bezel-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+      border: 1px solid rgba(255,255,255,0.07);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.03), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .btn-pill {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      letter-spacing: -0.01em;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .btn-primary {
+      background: #a3f0c8;
+      color: #07070d;
+    }
+    .btn-primary:hover {
+      background: #c8f8e0;
+      box-shadow: 0 8px 30px rgba(163, 240, 200, 0.4);
+      transform: translateY(-2px);
+    }
+    .btn-ghost {
+      background: rgba(255,255,255,0.04);
+      color: #e8e8f0;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(163, 240, 200, 0.3);
+      color: #a3f0c8;
+      transform: translateY(-2px);
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #07070d; }
+    ::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 2px; }
+    .radial-glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .page-hero-title {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+    .nav-active { color: #a3f0c8 !important; }
+
+    /* Step connector line */
+    .step-line {
+      position: absolute;
+      top: 50%;
+      left: 100%;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(163,240,200,0.3), transparent);
+      transform: translateY(-50%);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     FLOATING NAV
+═══════════════════════════════════════════ -->
+<header class="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
+  <nav class="glass-nav rounded-2xl px-6 py-3 flex items-center justify-between w-full max-w-5xl">
+    <a href="index.html" class="flex items-center gap-2">
+      <div class="w-7 h-7 rounded-lg bg-accent flex items-center justify-center">
+        <span class="text-ink font-black text-xs">JF</span>
+      </div>
+      <span class="font-bold text-sm tracking-tight text-white">조이플킴</span>
+    </a>
+    <ul class="hidden md:flex items-center gap-6">
+      <li><a href="work.html" class="text-subtle text-sm hover:text-white transition-colors duration-200">작업</a></li>
+      <li><a href="about.html" class="text-subtle text-sm hover:text-white transition-colors duration-200">소개</a></li>
+      <li><a href="process.html" class="text-sm transition-colors duration-200 nav-active">프로세스</a></li>
+    </ul>
+    <a href="tel:01095824999" class="btn-pill btn-primary text-xs py-2.5 px-5">
+      <iconify-icon icon="solar:phone-bold" width="14"></iconify-icon>
+      협업 문의
+    </a>
+  </nav>
+</header>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE HERO
+═══════════════════════════════════════════ -->
+<section class="relative pt-36 pb-16 overflow-hidden">
+  <div class="radial-glow w-96 h-96 bg-accent top-0 left-1/2 -translate-x-1/2 opacity-8"></div>
+  <div class="max-w-5xl mx-auto px-6 text-center">
+    <p class="text-accent text-xs font-medium tracking-widest uppercase mb-4 reveal">Process</p>
+    <h1 class="page-hero-title text-white reveal reveal-delay-1">
+      프로세스
+    </h1>
+    <p class="text-subtle text-lg mt-4 max-w-xl mx-auto reveal reveal-delay-2" style="line-height:1.75">
+      아이디어에서 런칭까지, 조이플킴이 일하는 방식입니다.
+    </p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     PROCESS STEPS — 4 CARDS
+═══════════════════════════════════════════ -->
+<section class="py-16 max-w-5xl mx-auto px-6">
+  <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- Step 1 -->
+    <div class="bezel-card rounded-3xl p-6 reveal group hover:border-accent/20 transition-all duration-300">
+      <div class="w-12 h-12 rounded-2xl bg-accent-dim flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+        <iconify-icon icon="solar:chat-round-dots-bold" class="text-accent" width="22"></iconify-icon>
+      </div>
+      <div class="text-accent/40 font-black text-4xl mb-2 tracking-tight">01</div>
+      <h3 class="text-white font-bold text-lg mb-2">발견</h3>
+      <p class="text-subtle text-sm leading-relaxed" style="line-height:1.7">
+        비즈니스 목표와 사용자 니즈를 깊게 이해합니다. 리서치와 인터뷰로 문제의 본질을 파악합니다.
+      </p>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="bezel-card rounded-3xl p-6 reveal reveal-delay-1 group hover:border-accent/20 transition-all duration-300">
+      <div class="w-12 h-12 rounded-2xl bg-accent-dim flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+        <iconify-icon icon="solar:pen-bold" class="text-accent" width="22"></iconify-icon>
+      </div>
+      <div class="text-accent/40 font-black text-4xl mb-2 tracking-tight">02</div>
+      <h3 class="text-white font-bold text-lg mb-2">설계</h3>
+      <p class="text-subtle text-sm leading-relaxed" style="line-height:1.7">
+        와이어프레임부터 하이파이 프로토타입까지, 반복적인 설계로 최적의 구조를 찾습니다.
+      </p>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="bezel-card rounded-3xl p-6 reveal reveal-delay-2 group hover:border-accent/20 transition-all duration-300">
+      <div class="w-12 h-12 rounded-2xl bg-accent-dim flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+        <iconify-icon icon="solar:palette-bold" class="text-accent" width="22"></iconify-icon>
+      </div>
+      <div class="text-accent/40 font-black text-4xl mb-2 tracking-tight">03</div>
+      <h3 class="text-white font-bold text-lg mb-2">제작</h3>
+      <p class="text-subtle text-sm leading-relaxed" style="line-height:1.7">
+        브랜드 감성에 맞는 비주얼 디자인과 인터랙션을 구현합니다. Webflow로 직접 빌드합니다.
+      </p>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="bezel-card rounded-3xl p-6 reveal reveal-delay-3 group hover:border-accent/20 transition-all duration-300">
+      <div class="w-12 h-12 rounded-2xl bg-accent-dim flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+        <iconify-icon icon="solar:rocket-bold" class="text-accent" width="22"></iconify-icon>
+      </div>
+      <div class="text-accent/40 font-black text-4xl mb-2 tracking-tight">04</div>
+      <h3 class="text-white font-bold text-lg mb-2">런칭</h3>
+      <p class="text-subtle text-sm leading-relaxed" style="line-height:1.7">
+        SEO 최적화, 퍼포먼스 점검 후 런칭합니다. 런칭 이후 데이터 기반 개선도 함께합니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     DETAIL — STEP BY STEP
+═══════════════════════════════════════════ -->
+<section class="py-16 bg-surface border-y border-border">
+  <div class="max-w-3xl mx-auto px-6">
+    <p class="text-accent text-xs font-medium tracking-widest uppercase mb-4 text-center reveal">How It Works</p>
+    <h2 class="text-3xl font-bold tracking-tight text-white text-center mb-14 reveal reveal-delay-1">각 단계별 세부 흐름</h2>
+
+    <div class="space-y-6">
+      <!-- Phase 1 -->
+      <div class="bezel-card rounded-3xl p-8 reveal">
+        <div class="flex items-start gap-6">
+          <div class="w-14 h-14 rounded-2xl bg-accent-dim flex items-center justify-center flex-shrink-0">
+            <iconify-icon icon="solar:chat-round-dots-bold" class="text-accent" width="26"></iconify-icon>
+          </div>
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="text-accent/50 font-black text-sm">01</span>
+              <h3 class="text-white font-bold text-xl">발견 (Discovery)</h3>
+            </div>
+            <ul class="space-y-2 text-subtle text-sm" style="line-height:1.7">
+              <li class="flex items-start gap-2"><iconify-icon icon="solar:check-circle-bold" class="text-accent mt-0.5 flex-shrink-0" width="16"></iconify-icon>킥오프 미팅 — 비즈니스 목표, 타겟 사용자, 경쟁사 분석</li>
+              <li class="flex items-start gap-2"><iconify-icon icon="solar:check-circle-bold" class="text-accent mt-0.5 flex-shrink-0" width="16"></iconify-icon>레퍼런스 수집 및 무드보드 제작</li>
+              <li class="flex items-start gap-2"><iconify-icon icon="solar:check-circle-bold" class="text-accent mt-0.5 flex-shrink-0" width="16"></iconify-icon>프로젝트 스코프 및 일정 확정</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="bezel-card rounded-3xl p-8 reveal reveal-delay-1">
+        <div class="flex items-start gap-6">
+          <div class="w-14 h-14 rounded-2xl bg-accent-dim flex items-center justify-center flex-shrink-0">
+            <iconify-icon icon="solar:pen-bold" class="text-accent" width="26"></iconify-icon>
+          </div>
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="text-accent/50 font-black text-sm">02</span>
+              <h3 class="text-white font-bold text-xl">설계 (Design)</h3>
+            </div>
+            <ul class="space-y-2 text-subtle text-sm" style="line-height:1.7">
+              <li class="flex items-start gap-2"><iconify-icon icon="solar:check-circle-bold" class="text-accent mt-0.5 flex-shrink-0" width="16"></iconify-icon>사이트맵 & 정보 구조 설계</li>
+              <li class="flex items-start gap-2"><iconify-icon icon="solar:check-circle-bold" class="text-accent mt-0.5 flex-shrink-0" width="16"></iconify-icon>로우파이 와이어프레임 → 하이파이 UI 디자인</li>
+              <li class="flex items-start gap-2"><iconify-icon icon="solar:check-circle-bold" class="text-accent mt-0.5 flex-shrink-0" width="16"></iconify-icon>인터랙티브 프로토타입으로 피드백 수렴</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="bezel-card rounded-3xl p-8 reveal reveal-delay-2">
+        <div class="flex items-start gap-6">
+          <div class="w-14 h-14 rounded-2xl bg-accent-dim flex items-center justify-center flex-shrink-0">
+            <iconify-icon icon="solar:palette-bold" class="text-accent" width="26"></iconify-icon>
+          </div>
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="text-accent/50 font-black text-sm">03</span>
+              <h3 class="text-white font-bold text-xl">제작 (Build)</h3>
+            </div>
+            <ul class="space-y-2 text-subtle text-sm" style="line-height:1.7">
+              <li class="flex items-start gap-2"><iconify-icon icon="solar:check-circle-bold" class="text-accent mt-0.5 flex-shrink-0" width="16"></iconify-icon>Webflow / HTML·CSS로 퍼블리싱</li>
+              <li class="flex items-start gap-2"><iconify-icon icon="solar:check-circle-bold" class="text-accent mt-0.5 flex-shrink-0" width="16"></iconify-icon>반응형 최적화 (모바일·태블릿·데스크톱)</li>
+              <li class="flex items-start gap-2"><iconify-icon icon="solar:check-circle-bold" class="text-accent mt-0.5 flex-shrink-0" width="16"></iconify-icon>애니메이션·인터랙션 구현</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 4 -->
+      <div class="bezel-card rounded-3xl p-8 reveal reveal-delay-3">
+        <div class="flex items-start gap-6">
+          <div class="w-14 h-14 rounded-2xl bg-accent-dim flex items-center justify-center flex-shrink-0">
+            <iconify-icon icon="solar:rocket-bold" class="text-accent" width="26"></iconify-icon>
+          </div>
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="text-accent/50 font-black text-sm">04</span>
+              <h3 class="text-white font-bold text-xl">런칭 (Launch)</h3>
+            </div>
+            <ul class="space-y-2 text-subtle text-sm" style="line-height:1.7">
+              <li class="flex items-start gap-2"><iconify-icon icon="solar:check-circle-bold" class="text-accent mt-0.5 flex-shrink-0" width="16"></iconify-icon>크로스 브라우저 & 디바이스 QA 테스트</li>
+              <li class="flex items-start gap-2"><iconify-icon icon="solar:check-circle-bold" class="text-accent mt-0.5 flex-shrink-0" width="16"></iconify-icon>SEO 기초 세팅 (메타태그, OG, sitemap)</li>
+              <li class="flex items-start gap-2"><iconify-icon icon="solar:check-circle-bold" class="text-accent mt-0.5 flex-shrink-0" width="16"></iconify-icon>배포 및 런칭 후 모니터링</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     CTA
+═══════════════════════════════════════════ -->
+<section class="py-24 max-w-3xl mx-auto px-6 text-center">
+  <p class="text-accent text-xs font-medium tracking-widest uppercase mb-4 reveal">Let's Start</p>
+  <h2 class="text-4xl font-bold tracking-tight text-white mb-6 reveal reveal-delay-1">프로젝트를 시작해볼까요?</h2>
+  <p class="text-subtle mb-10 reveal reveal-delay-2" style="line-height:1.75">
+    어떤 단계든, 이야기를 먼저 나눠보세요.
+  </p>
+  <div class="flex flex-wrap justify-center gap-4 reveal reveal-delay-3">
+    <a href="tel:01095824999" class="btn-pill btn-primary text-base py-4 px-8">
+      <iconify-icon icon="solar:phone-bold" width="18"></iconify-icon>
+      전화 문의
+    </a>
+    <a href="index.html" class="btn-pill btn-ghost text-base py-4 px-8">
+      <iconify-icon icon="solar:home-bold" width="18"></iconify-icon>
+      메인으로
+    </a>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════ -->
+<footer class="border-t border-border py-10">
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-lg bg-accent flex items-center justify-center">
+          <span class="text-ink font-black text-xs">JF</span>
+        </div>
+        <span class="font-bold text-sm text-white tracking-tight">조이플킴</span>
+        <span class="text-muted text-xs ml-2">Web Designer & Builder</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="#" class="w-9 h-9 rounded-full bg-surface border border-border flex items-center justify-center hover:border-accent/40 hover:text-accent text-muted transition-all duration-200">
+          <iconify-icon icon="solar:instagram-bold" width="16"></iconify-icon>
+        </a>
+        <a href="#" class="w-9 h-9 rounded-full bg-surface border border-border flex items-center justify-center hover:border-accent/40 hover:text-accent text-muted transition-all duration-200">
+          <iconify-icon icon="solar:twitter-bold" width="16"></iconify-icon>
+        </a>
+        <a href="#" class="w-9 h-9 rounded-full bg-surface border border-border flex items-center justify-center hover:border-accent/40 hover:text-accent text-muted transition-all duration-200">
+          <iconify-icon icon="solar:global-bold" width="16"></iconify-icon>
+        </a>
+        <a href="#" class="w-9 h-9 rounded-full bg-surface border border-border flex items-center justify-center hover:border-accent/40 hover:text-accent text-muted transition-all duration-200">
+          <iconify-icon icon="solar:letter-bold" width="16"></iconify-icon>
+        </a>
+      </div>
+      <p class="text-muted text-xs">© 2026 조이플킴. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+  );
+  revealEls.forEach(el => observer.observe(el));
+
+  const nav = document.querySelector('header');
+  window.addEventListener('scroll', () => {
+    nav.style.paddingTop = window.scrollY > 60 ? '0.5rem' : '1rem';
+    nav.style.paddingBottom = window.scrollY > 60 ? '0.5rem' : '1rem';
+  }, { passive: true });
+</script>
+
+</body>
+</html>
